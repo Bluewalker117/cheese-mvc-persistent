@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+
 import org.launchcode.models.Category;
 import org.launchcode.models.data.CategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,12 @@ public class CategoryController {
 
     @RequestMapping(value= "add", method = RequestMethod.POST)
     public String add(Model model, @ModelAttribute @Valid Category category, Errors errors){
+
         if(errors.hasErrors()){
+            model.addAttribute("title", "Add Category");
             return "category/add";
         }
+
 
         categoryDao.save(category);
         return "redirect:";

@@ -2,11 +2,11 @@ package org.launchcode.models;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Category {
@@ -18,6 +18,10 @@ public class Category {
     @NotNull
     @Size(min = 3, max = 15)
     private String  Name;
+
+    @OneToMany
+    @JoinColumn(name="category_id")
+    private List<Cheese> cheeses = new ArrayList<>();
 
 
     public Category(){
