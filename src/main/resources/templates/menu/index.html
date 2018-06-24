@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <head th:replace="fragments :: head"></head>
+
+
+    <body>
+        <h1 th:text="${title}">Title</h1>
+
+        <p th:unless="${menuItems} and ${menuItems.size()}">Men-u should add a menu?</p>
+
+        <ul>
+            <li th:each="menu : ${menuItems}">
+                <a th:href="'/menu/view/' + ${menu.id}" th:text="${menu.name}"></a>
+            </li>
+        </ul>
+
+        <a href="/menu/add">Create a Menu</a>
+    </body>
+</html>
