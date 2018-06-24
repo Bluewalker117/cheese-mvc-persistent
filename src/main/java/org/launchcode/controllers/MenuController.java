@@ -1,6 +1,7 @@
 package org.launchcode.controllers;
 
 
+import org.launchcode.Forms.AddMenuItemForm;
 import org.launchcode.models.Cheese;
 import org.launchcode.models.Menu;
 import org.launchcode.models.data.CheeseDao;
@@ -55,12 +56,37 @@ public class MenuController {
         return "redirect:view/" + number;
     }
 
-    @RequestMapping(value ="view", method = RequestMethod.POST)
-    public String viewMenu(Model model, int id){
-        Menu single = menuDao.findOne(id);
-        model.addAttribute("name", single.getName());
+    @RequestMapping(value ="view/{menuId}", method = RequestMethod.GET)
+    public String viewMenu(Model model, @PathVariable int menuId){
+        Menu single = menuDao.findOne(menuId);
+        model.addAttribute("title", single.getName());
+        model.addAttribute("menuItems", single.getCheeses());
+        model.addAttribute("menuId", single.getId());
         return "menu/view";
     }
 
+    @RequestMapping(value ="add_item/{menuId}", method = RequestMethod.GET)
+    public String addItem(Model model, @PathVariable int menuId){
+        Menu menu = menuDao.findOne(menuId);
 
+        AddMenuItemForm form = new AddMenuItemForm(cheeseDao.findAll(), menu);
+        model.addAttribute("title", "Add an Item to This Menu:" + menu.getName());
+        model.addAttribute("form", form);
+        return "menu/add_item";
+        }
+
+    @RequestMapping(value = "add_item", method = RequestMethod.POST)
+    public String addItem (@ModelAttribute @Valid AddMenuItemForm newForm, Errors errors, Model model){
+
+        if (errors.hasErrors()){
+            model.addAttribute("form", newForm);
+            return "menu/add_item";
+        }
+
+        Cheese aCheese = cheeseDao.findOne(newForm.getCheeseId());
+        Menu aMenu = menuDao.findOne(newForm.getMenuId());
+        aMenu.addItem(aCheese);
+        menuDao.save(aMenu);
+        return "redirect:/menu/view/" + aMenu.getId();
+    }
 }
