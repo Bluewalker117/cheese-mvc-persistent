@@ -17,7 +17,7 @@ public class Menu {
     private Integer id;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3, max = 33)
     private String name;
 
     @ManyToMany
